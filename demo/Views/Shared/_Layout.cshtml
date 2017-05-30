@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/jquery-ui.js")
+    <link href="~/Content/jquery-ui.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+    </div>
+    <!-- TODO Move this script into it's on .js file -->
+    <script>
+        $(function () {
+            $("#dialog-modal").dialog({
+                autoOpen: false,
+                show: {
+                    effect: "blind",
+                    duration: 500
+                },
+                hide: {
+                    effect: "blind",
+                    diration: 500
+                },
+                height: 600,
+                width: 700,
+                modal: true
+            });
+
+            $(".artists").mouseover(function () {   
+                var artistId = $(this).data('artist-id');
+
+                $.ajax({
+                    url: "Artist/GetArtist",
+                    type: "get",
+                    data: { id: artistId },
+                    success: function (data) {
+                        displayArtist(data);
+                    }
+                })
+            });
+
+        });
+
+        var displayArtist = function (artist) {
+            $('#profileImageUrl').attr('src', artist.profileImageURL);
+            $('#artistName').text(artist.name);
+            $('#country').text(artist.country);
+            $('#website').attr('href', artist.website);
+            $('#website').text(artist.website);
+            $('#labels').text(artist.labels);
+
+            $('#raProfile').attr('href', artist.raProfile);
+            $('#raProfile').text(artist.raProfile);
+
+            $('#twitter').attr('href', 'https://twitter.com/' + artist.twitter);
+            $('#twitter').text(artist.twitter);
+
+            $('#facebook').attr('href', 'https://facebook.com/' + artist.facebook);
+            $('#facebook').text(artist.facebook);
+
+            $('#discogs').attr('href', 'https://www.discogs.com/artist/' + artist.discogs);
+            $('#discogs').text(artist.discogs);
+
+            $('#biosmall').text(artist.bioSmall);
+            $("#dialog-modal").dialog("open");
+        }
+
+    </script>
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,99 @@
+﻿@using demo.Models
+@model List<ArtistSummary>
+@{
+    ViewBag.Title = "Index";
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="~/Content/Styles.css">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/jquery-ui.js")
+
+</head>
+<body>
+    <div class="bodyContainer">
+        <div class="innerContainer">
+            <h3 class="lineupTitle">Line up /</h3>
+            <div class="lineupContainer">
+                @foreach (var artist in Model)
+                {
+                    <label class="artists" data-artist-id="@artist.ID" id="@($"modal-opener{artist.ID}")">@artist.Name &nbsp/</label>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="modalContainer" id="dialog-modal" title="Artist Details">
+        <table class="table">
+            <tr>
+                <th></th>
+                <td><img id="profileImageUrl" src="" /></td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td><span id="artistName"></span></td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td><span id="country"></span></td>
+            </tr>
+            <tr>
+                <th>Labels</th>
+                <td><span id="labels"></span></td>
+            </tr>
+            <tr>
+                <th>Website</th>
+                <td>
+                    <a target="_blank" id="website" href="">
+                        
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>RAProfile</th>
+                <td>
+                    <a target="_blank" id="raProfile" href="">
+                        
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Twitter</th>
+                <td>
+                    <a target="_blank" id="twitter" href="">
+                        
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th class="columnWidth1">Facebook</th>
+                <td>
+                    <a target="_blank" id="facebook" href="">
+                        
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th class="columnWidth1">Discogs</th>
+                <td>
+                    <a target="_blank" id="discogs" href="">
+                        
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>BioSmall</th>
+                <td><span id="biosmall"></span></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

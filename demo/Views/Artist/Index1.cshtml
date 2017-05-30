@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" lang="ja">
+                $(document).ready(function() {
+                    $("#fivPopup").dialog(
+                        {
+                        autoOpen: false
+                        });
+
+                    $("#btnJqueryPopup").click(function() {
+                        var url '@Url.Action("jQueryPopup", "jQueryPopup")';
+                        $.get(url, function(data) {
+                            $("#divPopup").html(data);
+                            $("#divPopup").dialog('open');
+                        });
+                    });
+                });
+    </script>
+    <title>Artist Info</title>
+</head>
+
+<body>
+    <div>
+        <div id="divPopup" style="display: none;"></div>
+    </div>
+    <div>
+        <input id="btnJqueryPopup" type="button" value="Open Popup">
+    </div>
+</body>
+</html>
