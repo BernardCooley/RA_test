@@ -28,7 +28,6 @@ namespace demo.Controllers
             var summaries = new List<ArtistSummary>();
 
             artists.ForEach(a => summaries.Add(new ArtistSummary { ID = a.djid, Name = a.name }));
-
             return View(summaries);
         }
 
