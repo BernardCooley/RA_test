@@ -1,5 +1,5 @@
 ﻿@using demo.Models
-@model List<ArtistSummary>
+@model List<string>
 @{
     ViewBag.Title = "Index";
 }
@@ -25,7 +25,7 @@
             <div class="lineupContainer">
                 @foreach (var artist in Model)
                 {
-                    <label class="artists" data-artist-id="@artist.ID" id="@($"modal-opener{artist.ID}")">@artist.Name &nbsp/</label>
+                    <label class="artists" data-artist-name="@artist" id="@($"modal-opener{artist}")">@artist &nbsp/</label>
                 }
             </div>
         </div>

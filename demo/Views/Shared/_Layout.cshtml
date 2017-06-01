@@ -34,12 +34,12 @@
             });
 
             $(".artists").mouseover(function () {   
-                var artistId = $(this).data('artist-id');
+                var artist = $(this).data('artist-name');
 
                 $.ajax({
                     url: "Artist/GetArtist",
                     type: "get",
-                    data: { id: artistId },
+                    data: { artistName: artist },
                     success: function (data) {
                         displayArtist(data);
                     }
