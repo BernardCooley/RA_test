@@ -26,11 +26,6 @@ namespace demo.Controllers
             xd.LoadXml(xmlString);
             System.Diagnostics.Debug.WriteLine(xd);
             artists = LoadArtistsFromXml(xd);
-            System.Diagnostics.Debug.WriteLine(artists.GetType());
-            System.Diagnostics.Debug.WriteLine("/////////////////");
-            System.Diagnostics.Debug.WriteLine(artists[0].name);
-            System.Diagnostics.Debug.WriteLine(artists[1].name);
-            System.Diagnostics.Debug.WriteLine("/////////////////");
             var summaries = new List<ArtistSummary>();
 
             artists.ForEach(a => summaries.Add(new ArtistSummary { ID = a.djid, Name = a.name }));
@@ -44,18 +39,8 @@ namespace demo.Controllers
             await RunRequests(lineup(), xmlString);
             xmlString = parseXMLString(sb);
             xd.LoadXml(xmlString);
-            System.Diagnostics.Debug.WriteLine(xd);
             artists = LoadArtistsFromXml(xd);
-            //artists = LoadArtistsFromXml(xd);
-            System.Diagnostics.Debug.WriteLine(artists.Count);
-            //System.Diagnostics.Debug.WriteLine(artists[0].djid);
-            //System.Diagnostics.Debug.WriteLine(artists[1].djid);
-            //System.Diagnostics.Debug.WriteLine(artists[2].djid);
-            //System.Diagnostics.Debug.WriteLine(artists[3].djid);
-            //System.Diagnostics.Debug.WriteLine(artists[4].djid);
-            System.Diagnostics.Debug.WriteLine(id);
             var selectedArtist = artists.FirstOrDefault(a => a.djid == id);
-            //System.Diagnostics.Debug.WriteLine("///////////////// " + selectedArtist);
             return Json(selectedArtist, JsonRequestBehavior.AllowGet);
         }
 
@@ -116,7 +101,6 @@ namespace demo.Controllers
             {
                 await PostRequest("https://www.residentadvisor.net/api/dj.asmx/getartist", "2090605", "a465bde8-ba57-4ce0-95af-923cb856ab9d", "", s, "", xd, sb);
             }
-            //xd.LoadXml(xmlString);
         }
 
         async static Task PostRequest(string url, string userID, string accessKey, string djID, string artistName, string artistURL, XmlDocument xd, StringBuilder sb)
@@ -141,19 +125,7 @@ namespace demo.Controllers
                         HttpContentHeaders headers = content.Headers;
 
                         sb.Append(myContent);
-
-                        //xmlString += myContent;
-                        //System.Diagnostics.Debug.WriteLine("///////////////////////////////");
-                        //System.Diagnostics.Debug.WriteLine(xmlString);
-
-                        //xmlDoc = myContent;
-                        //System.Diagnostics.Debug.WriteLine(sb.ToString());
-                        //System.Diagnostics.Debug.WriteLine("///////////////////////////////");
-                        //xd.LoadXml(sb.ToString());
-                        //System.Diagnostics.Debug.WriteLine(xd);
-                        //System.Diagnostics.Debug.WriteLine(myContent);
                     }
-
                 }
             }
         }
