@@ -91,6 +91,8 @@ namespace demo.Controllers
             lineup.Add("Carl Craig");
             lineup.Add("Henry Saiz");
             lineup.Add("Jeff Mills");
+            lineup.Add("Cooley");
+            lineup.Add("ghsertsjh");
 
             return lineup;
         }
