@@ -3,14 +3,34 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Xml;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System;
+using System.Threading.Tasks;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace demo.Controllers
 {
     public class ArtistController : Controller
     {
-        public ActionResult Index()
+        XmlDocument xd = new XmlDocument();
+        String xmlString = "";
+        StringBuilder sb = new StringBuilder();
+        List<ArtistDetails> artists = new List<ArtistDetails>();
+
+        async public Task<ActionResult> Index()
         {
-            var artists = LoadArtistsFromXml();
+            await RunRequests(lineup(), xmlString);
+            xmlString = parseXMLString(sb);
+            xd.LoadXml(xmlString);
+            System.Diagnostics.Debug.WriteLine(xd);
+            artists = LoadArtistsFromXml(xd);
+            System.Diagnostics.Debug.WriteLine(artists.GetType());
+            System.Diagnostics.Debug.WriteLine("/////////////////");
+            System.Diagnostics.Debug.WriteLine(artists[0].name);
+            System.Diagnostics.Debug.WriteLine(artists[1].name);
+            System.Diagnostics.Debug.WriteLine("/////////////////");
             var summaries = new List<ArtistSummary>();
 
             artists.ForEach(a => summaries.Add(new ArtistSummary { ID = a.djid, Name = a.name }));
@@ -19,21 +39,31 @@ namespace demo.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetArtist(int id)
+        async public Task<ActionResult> GetArtist(int id)
         {
-            var artists = LoadArtistsFromXml();
+            await RunRequests(lineup(), xmlString);
+            xmlString = parseXMLString(sb);
+            xd.LoadXml(xmlString);
+            System.Diagnostics.Debug.WriteLine(xd);
+            artists = LoadArtistsFromXml(xd);
+            //artists = LoadArtistsFromXml(xd);
+            System.Diagnostics.Debug.WriteLine(artists.Count);
+            //System.Diagnostics.Debug.WriteLine(artists[0].djid);
+            //System.Diagnostics.Debug.WriteLine(artists[1].djid);
+            //System.Diagnostics.Debug.WriteLine(artists[2].djid);
+            //System.Diagnostics.Debug.WriteLine(artists[3].djid);
+            //System.Diagnostics.Debug.WriteLine(artists[4].djid);
+            System.Diagnostics.Debug.WriteLine(id);
             var selectedArtist = artists.FirstOrDefault(a => a.djid == id);
-            
+            //System.Diagnostics.Debug.WriteLine("///////////////// " + selectedArtist);
             return Json(selectedArtist, JsonRequestBehavior.AllowGet);
         }
 
-        private List<Models.ArtistDetails> LoadArtistsFromXml()
+        private List<Models.ArtistDetails> LoadArtistsFromXml(XmlDocument xd)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(Server.MapPath("/resources/artists.xml"));
-
+            System.Diagnostics.Debug.WriteLine("load artists from xml called");
             var artists = new List<Models.ArtistDetails>();
-            foreach (XmlNode node in doc.SelectNodes("RA/artist"))
+            foreach (XmlNode node in xd.SelectNodes("RA/artist"))
             {
                 artists.Add(new Models.ArtistDetails
                 {
@@ -51,6 +81,94 @@ namespace demo.Controllers
                 });
             }
             return artists;
+        }
+
+        async static void GetRequest(string url)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                using (HttpResponseMessage response = await client.GetAsync(url))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        string myContent = await content.ReadAsStringAsync();
+                    }
+                        
+                }
+            }
+        }
+
+        public List<string> lineup()
+        {
+            List<string> lineup = new List<string>();
+            lineup.Add("Laurent Garnier");
+            lineup.Add("Paul Woolford");
+            lineup.Add("Carl Craig");
+            lineup.Add("Henry Saiz");
+            lineup.Add("Jeff Mills");
+
+            return lineup;
+        }
+
+        async public Task RunRequests(List<string> lineup, string xmlString)
+        {
+            foreach(string s in lineup)
+            {
+                await PostRequest("https://www.residentadvisor.net/api/dj.asmx/getartist", "2090605", "a465bde8-ba57-4ce0-95af-923cb856ab9d", "", s, "", xd, sb);
+            }
+            //xd.LoadXml(xmlString);
+        }
+
+        async static Task PostRequest(string url, string userID, string accessKey, string djID, string artistName, string artistURL, XmlDocument xd, StringBuilder sb)
+        {
+            IEnumerable<KeyValuePair<string, string>> queries = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("UserID", userID),
+                new KeyValuePair<string, string>("AccessKey", accessKey),
+                new KeyValuePair<string, string>("DJID", djID),
+                new KeyValuePair<string, string>("ArtistName", artistName),
+                new KeyValuePair<string, string>("URL", artistURL)
+            };
+            HttpContent q = new FormUrlEncodedContent(queries);
+
+            using (HttpClient client = new HttpClient())
+            {
+                using (HttpResponseMessage response = await client.PostAsync(url, q))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        string myContent = await content.ReadAsStringAsync();
+                        HttpContentHeaders headers = content.Headers;
+
+                        sb.Append(myContent);
+
+                        //xmlString += myContent;
+                        //System.Diagnostics.Debug.WriteLine("///////////////////////////////");
+                        //System.Diagnostics.Debug.WriteLine(xmlString);
+
+                        //xmlDoc = myContent;
+                        //System.Diagnostics.Debug.WriteLine(sb.ToString());
+                        //System.Diagnostics.Debug.WriteLine("///////////////////////////////");
+                        //xd.LoadXml(sb.ToString());
+                        //System.Diagnostics.Debug.WriteLine(xd);
+                        //System.Diagnostics.Debug.WriteLine(myContent);
+                    }
+
+                }
+            }
+        }
+
+        public String parseXMLString(StringBuilder sb)
+        {
+            String xmlString = sb.ToString();
+            xmlString = xmlString.Replace("</RA>", "");
+            xmlString = xmlString.Replace("<RA>", "");
+            xmlString = xmlString.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "");
+            xmlString = xmlString.Insert(0, "\n<RA>");
+            xmlString = xmlString.Insert(0, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            xmlString = xmlString.Insert(xmlString.Length, "</RA>");
+
+            return xmlString;
         }
     }
 }
