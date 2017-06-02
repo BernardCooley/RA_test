@@ -16,7 +16,12 @@ namespace demo
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Artist", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Event", action = "Input", id = UrlParameter.Optional }
+            );
+            routes.MapRoute(
+                name: "Artist",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Artist", action = "Index", lineup = "" }
             );
         }
     }

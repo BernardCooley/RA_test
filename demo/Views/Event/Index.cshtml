@@ -1,0 +1,39 @@
+﻿@using demo.Models
+@model List<EventDetails>
+@{
+    ViewBag.Title = "Index";
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="~/Content/Styles.css">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/jquery-ui.js")
+
+</head>
+<body>
+    <div class="bodyContainer">
+        <div class="innerContainer">
+            <h3 class="lineupTitle">Events</h3>
+            <div class="lineupContainer">
+                @foreach (var eventDetails in Model)
+                {
+                    <ul>
+                        <li>
+                            <a href="@Url.Action("Index", "Artist", new {lineup = @eventDetails.lineup})" class="events" data-lineup="@eventDetails.lineup"
+                               id="@eventDetails.eventName">@eventDetails.eventName</a>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

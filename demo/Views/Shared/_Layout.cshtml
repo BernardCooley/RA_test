@@ -15,7 +15,6 @@
         @RenderBody()
         <hr />
     </div>
-    <!-- TODO Move this script into it's on .js file -->
     <script>
         $(function () {
             $("#dialog-modal").dialog({
@@ -35,9 +34,9 @@
 
             $(".artists").mouseover(function () {   
                 var artist = $(this).data('artist-name');
-
+                console.log("artist hovered");
                 $.ajax({
-                    url: "Artist/GetArtist",
+                    url: "GetArtist",
                     type: "get",
                     data: { artistName: artist },
                     success: function (data) {
