@@ -35,7 +35,6 @@ namespace demo.Controllers
         private List<EventDetails> LoadEventsFromXml(XmlDocument xd)
         {
             var events = new List<EventDetails>();
-
             foreach (XmlNode node in xd.SelectNodes("RA/events/event"))
             {
                 events.Add(new EventDetails
